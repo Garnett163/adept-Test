@@ -1,45 +1,55 @@
 import './CompanyTable.css';
-import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useState, useEffect } from 'react';
 import { Company } from '../../types/companyType';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   toggleAllCompaniesSelection,
   toggleCompanySelection,
-  addCompany,
   removeSelectedCompanies,
   updateCompany,
 } from '../../store/companySlice';
 import Button from '../UI/Button';
 import useTogglePopup from '../../hooks/useTogglePopup';
 import Modal from '../Modal/Modal';
+import CreateCompanyForm from './CreateCompanyForm/CreateCompanyForm';
 
-const CompanyTable = () => {
+interface CompanyTableProps {
+  selectedCompanies: string[];
+  setSelectedCompanies: React.Dispatch<React.SetStateAction<string[]>>;
+  selectAllChecked: boolean;
+  setSelectAllChecked: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function CompanyTable({
+  selectedCompanies,
+  setSelectedCompanies,
+  selectAllChecked,
+  setSelectAllChecked,
+}: CompanyTableProps) {
   const { showModal, handleCloseModal, handleOpenModal } = useTogglePopup();
   const companies = useAppSelector(state => state.company);
+  const employees = useAppSelector(state => state.employee);
+
   const dispatch = useAppDispatch();
-  const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [newCompany, setNewCompany] = useState<Company>({
-    id: '',
-    name: '',
-    employees: 0,
-    address: '',
-    selected: false,
-  });
   const [editableCompany, setEditableCompany] = useState<Company | null>(null);
 
-  function handleCheckboxChange(companyId: string) {
-    dispatch(toggleCompanySelection(companyId));
+  function handleCheckboxChange(company: Company) {
+    const updatedSelectedCompanies = company.selected
+      ? selectedCompanies.filter(selectedCompany => selectedCompany !== company.name)
+      : [...selectedCompanies, company.name];
+
+    dispatch(toggleCompanySelection(company.id));
+    setSelectedCompanies(updatedSelectedCompanies);
   }
 
   function handleSelectAllChange() {
     dispatch(toggleAllCompaniesSelection());
     setSelectAllChecked(!selectAllChecked);
-  }
-
-  function handleAddCompany() {
-    dispatch(addCompany(newCompany));
-    setNewCompany({ id: uuidv4(), name: '', employees: 0, address: '', selected: false });
+    if (!selectAllChecked) {
+      setSelectedCompanies(companies.map(company => company.name));
+    } else {
+      setSelectedCompanies([]);
+    }
   }
 
   function handleRemoveSelectedCompanies() {
@@ -62,16 +72,23 @@ const CompanyTable = () => {
     setEditableCompany(null);
   }
 
+  useEffect(() => {
+    const allSelected = companies.every(company => company.selected);
+    setSelectAllChecked(allSelected);
+  }, [companies, selectedCompanies, setSelectAllChecked]);
+
   return (
     <div className="company-table__container">
       <Modal
+        classBtn="company-table__createBtn"
         text="Добавить компанию"
         titleModal="Создание компании"
         showModal={showModal}
         handleCloseModal={handleCloseModal}
         handleOpenModal={handleOpenModal}
-      ></Modal>
-      {/* <Button name="Добавить компанию" handleButtonClick={handleAddCompany} /> */}
+      >
+        <CreateCompanyForm handleCloseModal={handleCloseModal} />
+      </Modal>
       <Button name="Удалить компанию" handleButtonClick={handleRemoveSelectedCompanies} />
       <table className="company-table">
         <thead>
@@ -101,7 +118,7 @@ const CompanyTable = () => {
                   className="company-table__checkbox"
                   type="checkbox"
                   checked={company.selected}
-                  onChange={() => handleCheckboxChange(company.id)}
+                  onChange={() => handleCheckboxChange(company)}
                 />
               </td>
               <td className="company-table__td">
@@ -116,7 +133,9 @@ const CompanyTable = () => {
                   company.name
                 )}
               </td>
-              <td className="company-table__td">{company.employees}</td>
+              <td className="company-table__td">
+                {employees.filter(employee => employee.company === company.name).length}
+              </td>
               <td className="company-table__td">
                 {editableCompany?.id === company.id ? (
                   <input
@@ -145,6 +164,6 @@ const CompanyTable = () => {
       </table>
     </div>
   );
-};
+}
 
 export default CompanyTable;

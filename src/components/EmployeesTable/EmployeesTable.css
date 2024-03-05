@@ -1,0 +1,12 @@
+.employees-table__container {
+  padding: 20px;
+}
+
+.employees-table {
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+.job-title__input {
+  margin-bottom: 5px;
+}

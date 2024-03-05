@@ -1,0 +1,13 @@
+.create-employee__select {
+  padding: 0;
+  padding-bottom: 3.5px;
+  outline: none;
+  /* border: none; */
+  border-bottom: 1px solid #212526;
+  background-color: initial;
+  color: black;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 17px;
+  transition: border-color 0.2s;
+}

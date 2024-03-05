@@ -1,0 +1,20 @@
+.create-company {
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-company__input {
+  padding: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.16px;
+  color: #000000;
+  text-transform: none;
+  border: none;
+  outline: 1px solid transparent;
+  border-radius: 12px;
+  background-color: #d2d0e1;
+  transition: outline 0.3s;
+}

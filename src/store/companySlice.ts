@@ -22,11 +22,11 @@ const companysSlice = createSlice({
         company.selected = !allSelected;
       });
     },
-
     addCompany: (state, action) => {
       const newCompany = action.payload;
       state.push(newCompany);
     },
+
     removeSelectedCompanies: state => {
       return state.filter(company => !company.selected);
     },
