@@ -1,5 +1,5 @@
 import './EmployeesTable.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Employee } from '../../types/employeeType';
 import useTogglePopup from '../../hooks/useTogglePopup';
 import Modal from '../Modal/Modal';
@@ -52,6 +52,11 @@ function EmployeesTable({ selectedCompanies }: EmployeesTableProps) {
   function handleCancelEdit() {
     setEditableEmployee(null);
   }
+
+  useEffect(() => {
+    const allSelected = employees.every(employees => employees.selected);
+    setSelectAllChecked(allSelected);
+  }, [employees, selectedCompanies, setSelectAllChecked]);
 
   return (
     <div className="employees-table__container">
