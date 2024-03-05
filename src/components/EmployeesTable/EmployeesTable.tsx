@@ -24,10 +24,6 @@ function EmployeesTable({ selectedCompanies }: EmployeesTableProps) {
   const [editableEmployee, setEditableEmployee] = useState<Employee | null>(null);
 
   const companyEmployees = employees.filter(employee => selectedCompanies.includes(employee.company));
-  // const companyEmployees =
-  //   selectedCompanies.length > 0
-  //     ? employees.filter(employee => selectedCompanies.includes(employee.company))
-  //     : employees;
 
   function handleSelectAllChange() {
     dispatch(toggleAllEmployeesSelection());

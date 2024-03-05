@@ -55,6 +55,7 @@ function CompanyTable({
   function handleRemoveSelectedCompanies() {
     dispatch(removeSelectedCompanies());
     setSelectAllChecked(false);
+    setSelectedCompanies([]);
   }
 
   function handleEditCompany(company: Company) {

@@ -26,9 +26,13 @@ function CreateCompanyForm({ handleCloseModal }: CreateCompanyFormProps) {
 
   function handleAddCompany(evt: React.FormEvent<HTMLFormElement>) {
     evt.preventDefault();
-    dispatch(addCompany(newCompany));
-    setNewCompany({ id: uuidv4(), name: '', employees: 0, address: '', selected: false });
-    if (handleCloseModal) handleCloseModal();
+    try {
+      dispatch(addCompany(newCompany));
+      setNewCompany({ id: uuidv4(), name: '', employees: 0, address: '', selected: false });
+      if (handleCloseModal) handleCloseModal();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
